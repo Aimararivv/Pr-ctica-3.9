@@ -1,7 +1,9 @@
 ﻿using libreriaXAGFRRR.Data.Models;
 using libreriaXAGFRRR.Data.ViewModels;
+using libreriaXAGFRRR.Exceptions;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace libreriaXAGFRRR.Data.Services
 {
@@ -15,6 +17,7 @@ namespace libreriaXAGFRRR.Data.Services
         //Metodo que nos permite agregar una nueva editora en la BD
         public Publisher AddPublisher(PublisherVM publisher)
         {
+            if (StringStartsWithNumber(publisher.Name)) throw new PublisherNameException("El nombre empieza con un número", publisher.Name);
             var _publisher = new Publisher()
             {
                 Name = publisher.Name
@@ -51,10 +54,11 @@ namespace libreriaXAGFRRR.Data.Services
                 _context.Publishers.Remove(_publisher);
                 _context.SaveChanges();
             }
-            else 
+            else
             {
                 throw new Exception($"La editora con el id: {id} no existe!");
             }
         }
+        private bool StringStartsWithNumber(string name) => (Regex.IsMatch(name, @"^\d"));
     }
 }

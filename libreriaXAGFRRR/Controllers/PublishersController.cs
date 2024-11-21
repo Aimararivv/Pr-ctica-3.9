@@ -1,5 +1,6 @@
 ﻿using libreriaXAGFRRR.Data.Services;
 using libreriaXAGFRRR.Data.ViewModels;
+using libreriaXAGFRRR.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,6 +23,10 @@ namespace libreriaXAGFRRR.Controllers
             {
                 var newPublisher = _publishersService.AddPublisher(publisher);
                 return Created(nameof(AddPublisher), newPublisher);
+            }
+            catch (PublisherNameException ex)
+            {
+                return BadRequest($"{ex.Message}, Nombre de la editora: {ex.PublisherName}");
             }
             catch (Exception ex)
             {
